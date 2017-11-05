@@ -214,57 +214,57 @@ public class LocationService extends Service {
             provider.onDestroy();
         }
 
-        if (intent == null) {
-            //service has been probably restarted so we need to load config from db
-            ConfigurationDAO dao = DAOFactory.createConfigurationDAO(this);
-            try {
-                config = dao.retrieveConfiguration();
-            } catch (JSONException e) {
-                log.error("Config exception: {}", e.getMessage());
-                config = new Config(); //using default config
-            }
+        // if (intent == null) {
+        //     //service has been probably restarted so we need to load config from db
+        //     ConfigurationDAO dao = DAOFactory.createConfigurationDAO(this);
+        //     try {
+        //         config = dao.retrieveConfiguration();
+        //     } catch (JSONException e) {
+        //         log.error("Config exception: {}", e.getMessage());
+        //         config = new Config(); //using default config
+        //     }
+        // } else {
+        if (intent.hasExtra("config")) {
+            config = intent.getParcelableExtra("config");
         } else {
-            if (intent.hasExtra("config")) {
-                config = intent.getParcelableExtra("config");
-            } else {
-                config = new Config(); //using default config
-            }
+            config = new Config(); //using default config
         }
+        // }
 
         log.debug("Will start service with: {}", config.toString());
 
         LocationProviderFactory spf = new LocationProviderFactory(this);
         provider = spf.getInstance(config.getLocationProvider());
 
-        if (config.getStartForeground()) {
-            // Build a Notification required for running service in foreground.
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setContentTitle(config.getNotificationTitle());
-            builder.setContentText(config.getNotificationText());
-            if (config.getSmallNotificationIcon() != null) {
-                builder.setSmallIcon(getDrawableResource(config.getSmallNotificationIcon()));
-            } else {
-                builder.setSmallIcon(android.R.drawable.ic_menu_mylocation);
-            }
-            if (config.getLargeNotificationIcon() != null) {
-                builder.setLargeIcon(BitmapFactory.decodeResource(getApplication().getResources(), getDrawableResource(config.getLargeNotificationIcon())));
-            }
-            if (config.getNotificationIconColor() != null) {
-                builder.setColor(this.parseNotificationIconColor(config.getNotificationIconColor()));
-            }
+        // if (config.getStartForeground()) {
+        //     // Build a Notification required for running service in foreground.
+        //     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        //     builder.setContentTitle(config.getNotificationTitle());
+        //     builder.setContentText(config.getNotificationText());
+        //     if (config.getSmallNotificationIcon() != null) {
+        //         builder.setSmallIcon(getDrawableResource(config.getSmallNotificationIcon()));
+        //     } else {
+        //         builder.setSmallIcon(android.R.drawable.ic_menu_mylocation);
+        //     }
+        //     if (config.getLargeNotificationIcon() != null) {
+        //         builder.setLargeIcon(BitmapFactory.decodeResource(getApplication().getResources(), getDrawableResource(config.getLargeNotificationIcon())));
+        //     }
+        //     if (config.getNotificationIconColor() != null) {
+        //         builder.setColor(this.parseNotificationIconColor(config.getNotificationIconColor()));
+        //     }
 
-            // Add an onclick handler to the notification
-            Context context = getApplicationContext();
-            String packageName = context.getPackageName();
-            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.setContentIntent(contentIntent);
+        //     // Add an onclick handler to the notification
+        //     Context context = getApplicationContext();
+        //     String packageName = context.getPackageName();
+        //     Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        //     launchIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        //     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, launchIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        //     builder.setContentIntent(contentIntent);
 
-            Notification notification = builder.build();
-            notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_NO_CLEAR;
-            startForeground(startId, notification);
-        }
+        //     Notification notification = builder.build();
+        //     notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_FOREGROUND_SERVICE | Notification.FLAG_NO_CLEAR;
+        //     startForeground(startId, notification);
+        // }
 
         provider.startRecording();
 
@@ -324,21 +324,21 @@ public class LocationService extends Service {
     public void handleLocation(BackgroundLocation location) {
         log.debug("New location {}", location.toString());
 
-        location.setBatchStartMillis(System.currentTimeMillis() + ONE_MINUTE); // prevent sync of not yet posted location
-        persistLocation(location);
+        // location.setBatchStartMillis(System.currentTimeMillis() + ONE_MINUTE); // prevent sync of not yet posted location
+        // persistLocation(location);
 
-        if (config.hasUrl() || config.hasSyncUrl()) {
-            Long locationsCount = dao.locationsForSyncCount(System.currentTimeMillis());
-            log.debug("Location to sync: {} threshold: {}", locationsCount, config.getSyncThreshold());
-            if (locationsCount >= config.getSyncThreshold()) {
-                log.debug("Attempt to sync locations: {} threshold: {}", locationsCount, config.getSyncThreshold());
-                SyncService.sync(syncAccount, getStringResource(Config.CONTENT_AUTHORITY_RESOURCE));
-            }
-        }
+        // if (config.hasUrl() || config.hasSyncUrl()) {
+        //     Long locationsCount = dao.locationsForSyncCount(System.currentTimeMillis());
+        //     log.debug("Location to sync: {} threshold: {}", locationsCount, config.getSyncThreshold());
+        //     if (locationsCount >= config.getSyncThreshold()) {
+        //         log.debug("Attempt to sync locations: {} threshold: {}", locationsCount, config.getSyncThreshold());
+        //         SyncService.sync(syncAccount, getStringResource(Config.CONTENT_AUTHORITY_RESOURCE));
+        //     }
+        // }
 
-        if (hasConnectivity && config.hasUrl()) {
-            postLocationAsync(location);
-        }
+        // if (hasConnectivity && config.hasUrl()) {
+        //     postLocationAsync(location);
+        // }
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("location", location);

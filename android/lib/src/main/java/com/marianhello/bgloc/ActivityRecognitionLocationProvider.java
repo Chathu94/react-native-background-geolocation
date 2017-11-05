@@ -52,24 +52,24 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
         log = LoggerManager.getLogger(ActivityRecognitionLocationProvider.class);
         log.info("Creating ActivityRecognitionLocationProvider");
 
-        PowerManager pm = (PowerManager) locationService.getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-        wakeLock.acquire();
+        // PowerManager pm = (PowerManager) locationService.getSystemService(Context.POWER_SERVICE);
+        // wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        // wakeLock.acquire();
 
-        Intent detectedActivitiesIntent = new Intent(DETECTED_ACTIVITY_UPDATE);
-        detectedActivitiesPI = PendingIntent.getBroadcast(locationService, 9002, detectedActivitiesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        registerReceiver(detectedActivitiesReceiver, new IntentFilter(DETECTED_ACTIVITY_UPDATE));
+        // Intent detectedActivitiesIntent = new Intent(DETECTED_ACTIVITY_UPDATE);
+        // detectedActivitiesPI = PendingIntent.getBroadcast(locationService, 9002, detectedActivitiesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // registerReceiver(detectedActivitiesReceiver, new IntentFilter(DETECTED_ACTIVITY_UPDATE));
     }
 
     @Override
     public void onLocationChanged(Location location) {
         log.debug("Location change: {}", location.toString());
 
-        if (lastActivity.getType() == DetectedActivity.STILL) {
-            handleStationary(location);
-            stopTracking();
-            return;
-        }
+        // if (lastActivity.getType() == DetectedActivity.STILL) {
+        //     handleStationary(location);
+        //     stopTracking();
+        //     return;
+        // }
 
         if (config.isDebugging()) {
             Toast.makeText(locationService, "acy:" + location.getAccuracy() + ",v:" + location.getSpeed() + ",df:" + config.getDistanceFilter(), Toast.LENGTH_LONG).show();
@@ -103,16 +103,15 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
     public void startTracking() {
         if (isTracking) { return; }
 
-        Integer priority = translateDesiredAccuracy(config.getDesiredAccuracy());
+        // Integer priority = translateDesiredAccuracy(config.getDesiredAccuracy());
         LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(priority) // this.accuracy
-                .setFastestInterval(config.getFastestInterval())
-                .setInterval(config.getInterval());
-                // .setSmallestDisplacement(config.getStationaryRadius());
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setFastestInterval(0)
+                .setInterval(0);
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
             isTracking = true;
-            log.debug("Start tracking with priority={} fastestInterval={} interval={} activitiesInterval={} stopOnStillActivity={}", priority, config.getFastestInterval(), config.getInterval(), config.getActivitiesInterval(), config.getStopOnStillActivity());
+            log.debug("Start tracking with");
         } catch (SecurityException e) {
             log.error("Security exception: {}", e.getMessage());
             this.handleSecurityException(e);
@@ -180,7 +179,7 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
 
     @Override
     public void onConnectionSuspended(int cause) {
-        // googleApiClient.connect();
+        googleApiClient.connect();
         log.info("Connection to Google Play Services suspended");
     }
 
@@ -194,25 +193,25 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
     * 0:  most aggressive, most accurate, worst battery drain
     * 1000:  least aggressive, least accurate, best for battery.
     */
-    private Integer translateDesiredAccuracy(Integer accuracy) {
-        if (accuracy >= 10000) {
-            return LocationRequest.PRIORITY_NO_POWER;
-        }
-        if (accuracy >= 1000) {
-            return LocationRequest.PRIORITY_LOW_POWER;
-        }
-        if (accuracy >= 100) {
-            return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-        }
-        if (accuracy >= 10) {
-            return LocationRequest.PRIORITY_HIGH_ACCURACY;
-        }
-        if (accuracy >= 0) {
-            return LocationRequest.PRIORITY_HIGH_ACCURACY;
-        }
+    // private Integer translateDesiredAccuracy(Integer accuracy) {
+        // if (accuracy >= 10000) {
+        //     return LocationRequest.PRIORITY_NO_POWER;
+        // }
+        // if (accuracy >= 1000) {
+        //     return LocationRequest.PRIORITY_LOW_POWER;
+        // }
+        // if (accuracy >= 100) {
+        //     return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+        // }
+        // if (accuracy >= 10) {
+        //     return LocationRequest.PRIORITY_HIGH_ACCURACY;
+        // }
+        // if (accuracy >= 0) {
+            // return LocationRequest.PRIORITY_HIGH_ACCURACY;
+        // }
 
-        return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
-    }
+        // return LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+    // }
 
 
     public static DetectedActivity getProbableActivity(ArrayList<DetectedActivity> detectedActivities) {
@@ -285,8 +284,8 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
         super.onDestroy();
         log.info("Destroying ActivityRecognitionLocationProvider");
         stopRecording();
-        disconnectFromPlayAPI();
-        unregisterReceiver(detectedActivitiesReceiver);
-        wakeLock.release();
+        // disconnectFromPlayAPI();
+        // unregisterReceiver(detectedActivitiesReceiver);
+        // wakeLock.release();
     }
 }

@@ -47,12 +47,15 @@ var BackgroundGeolocation = {
   },
 
   start: function(successFn, errorFn) {
-    console.log(RNBackgroundGeolocation);
+    successFn = successFn || emptyFn;
+    errorFn = errorFn || emptyFn;
     RNBackgroundGeolocation.start(successFn, errorFn);
   },
 
-  stop: function() {
-    RNBackgroundGeolocation.stop();
+  stop: function(successFn, errorFn) {
+    successFn = successFn || emptyFn;
+    errorFn = errorFn || emptyFn;
+    RNBackgroundGeolocation.stop(successFn, errorFn);
   },
 
   // @deprecated
@@ -147,7 +150,6 @@ var BackgroundGeolocation = {
     if (this.events.indexOf(event) < 0) {
       throw 'RNBackgroundGeolocation: Unknown event "' + event + '"';
     }
-    console.log('ADDED');
     return RNBackgroundGeolocationListener.addListener(event, callbackFn);
   },
 

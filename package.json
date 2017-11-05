@@ -1,15 +1,35 @@
 {
-  "name": "react-native-mauron85-background-geolocation",
-  "version": "0.3.1",
-  "description": "optimized background location tracking",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
+  "_from": "git+https://github.com/Chathu94/react-native-background-geolocation.git",
+  "_id": "react-native-mauron85-background-geolocation@0.3.1",
+  "_inBundle": false,
+  "_integrity": "sha1-a56/6C2Gw5Y7DyE/KiVNHualtaA=",
+  "_location": "/react-native-mauron85-background-geolocation",
+  "_phantomChildren": {},
+  "_requested": {
     "type": "git",
-    "url": "git+https://github.com/mauron85/react-native-background-geolocation.git"
+    "raw": "git+https://github.com/Chathu94/react-native-background-geolocation.git",
+    "rawSpec": "git+https://github.com/Chathu94/react-native-background-geolocation.git",
+    "saveSpec": "git+https://github.com/Chathu94/react-native-background-geolocation.git",
+    "fetchSpec": "https://github.com/Chathu94/react-native-background-geolocation.git",
+    "gitCommittish": "master"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/Chathu94/react-native-background-geolocation.git#f1871eeb38a432a188de2426f22e50469fe4ef0a",
+  "_spec": "git+https://github.com/Chathu94/react-native-background-geolocation.git",
+  "_where": "/Users/chathuranga/Projects/bcon/Client",
+  "author": {
+    "name": "Marian Hello"
+  },
+  "bugs": {
+    "url": "https://github.com/mauron85/react-native-background-geolocation/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "optimized background location tracking",
+  "homepage": "https://github.com/mauron85/react-native-background-geolocation#readme",
   "keywords": [
     "gps",
     "geolocation",
@@ -23,13 +43,18 @@
     "android",
     "ios"
   ],
-  "author": "Marian Hello",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/mauron85/react-native-background-geolocation/issues"
-  },
-  "homepage": "https://github.com/mauron85/react-native-background-geolocation#readme",
+  "main": "index.js",
+  "name": "react-native-mauron85-background-geolocation",
   "peerDependencies": {
     "react-native": ">=0.47.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauron85/react-native-background-geolocation.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.3.1"
 }
